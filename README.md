@@ -10,7 +10,7 @@ Methods
 
 **Constructor**
 
-`sets` (Object) - settings object
+`sets` (Object) - settings object  
 
 Creates new Post Message Service instance.
 
@@ -28,7 +28,7 @@ Constructor gets settings that should be like this:
 
 **.set(sets)**
 
-`sets` (Object) - settings object same as in constructor
+`sets` (Object) - settings object same as in constructor  
 
 This method resets the service, but *without* removing binded callbacks.
 
@@ -38,8 +38,8 @@ This method resets the service, but *without* removing binded callbacks.
 
 **.send(type[, data])**
 
-`type` (string) - event name to be dispatched in the target window
-`data` (Object) - data to be sent to the target window
+`type` (string) - event name to be dispatched in the target window  
+`data` (Object) - data to be sent to the target window  
 
 Sends an event to the target window with provided data. Data must be an object.
 
@@ -49,7 +49,7 @@ Sends an event to the target window with provided data. Data must be an object.
 
 **.sendRAW(message)**
 
-`message` (*) - message of any type which can be JSON.stringified
+`message` (*) - message of any type which can be JSON.stringified  
 
 Sends a native (RAW) postMessage to the target window. You should listen to a 'message' event to receive RAW messages
 
@@ -60,9 +60,9 @@ Sends a native (RAW) postMessage to the target window. You should listen to a 'm
 
 **.on(type, callback[, context])**
 
-`type` (string) - event name to listen to
-`callback` (Function) - callback to be called
-`context` (Object) - context for calling the callback
+`type` (string) - event name to listen to  
+`callback` (Function) - callback to be called  
+`context` (Object) - context for calling the callback  
 
 Binds callback to the event. You can provide several `type`s divided by spaces or commas.
 
@@ -76,9 +76,9 @@ Binds callback to the event. You can provide several `type`s divided by spaces o
 
 **.once(type, callback[, context])**
 
-`type` (string) - event name to listen to
-`callback` (Function) - callback to be called
-`context` (Object) - context for calling the callback
+`type` (string) - event name to listen to  
+`callback` (Function) - callback to be called  
+`context` (Object) - context for calling the callback  
 
 Binds callback to the event only *once*. You can provide several `type`s divided by spaces or commas.
 
@@ -92,9 +92,9 @@ Binds callback to the event only *once*. You can provide several `type`s divided
 
 **.trigger(type[, data[, rawEvent]])**
 
-`type` (string) - event type to be dispatched
-`data` (Object) - event data
-`rawEvent` (*) - RAW event
+`type` (string) - event type to be dispatched  
+`data` (Object) - event data  
+`rawEvent` (*) - RAW event  
 
 Triggers an event in *this* window.
 
