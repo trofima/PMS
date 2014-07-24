@@ -34,7 +34,7 @@ PMS.prototype._splitRegExp = /[^,\s]+/g;
  * Set PMS settings
  *
  * @param {Object} sets - settings
-  * @param {Window} sets.targetWindow - target window (frame)
+  * @param {Window} sets.targetWindow - target window object (e.g. iframe.contentWindow, window.parent)
   * @param {string} [sets.connectionID] - unique ID of the current connection to filter messages from target window
   * @param {string} [sets.targetOrigin] - representing the origin of the targetWindow where event must be dispatched
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage
@@ -70,7 +70,7 @@ PMS.prototype.send = function(type, data){
 };
 
 /**
- * Triggering an event in the target window with 'RAW' message
+ * Triggering a native (RAW) postMessage in the target window with message of any type
  *
  * @param message - message of any type which can be JSON.stringified
  * */
@@ -132,10 +132,10 @@ PMS.prototype._listen = function(){
 /**
  * Binds callback to the event
  *
- * @param {string} type - event name to listen to
+ * @param {string} type - event name to listen to (there can be several types provided that should be divided by spaces and commas)
  * @param {Function} callback - callback to be called
- * @param {Object} context - context for calling the callback
- * @param {Boolean} _once - denoting to fire callback only once
+ * @param {Object} [context] - context for calling the callback
+ * @param {Boolean} [_once] - denoting to fire callback only once
  */
 PMS.prototype.on = function(type, callback, context, _once){
     context = context || null;
@@ -163,6 +163,8 @@ PMS.prototype.on = function(type, callback, context, _once){
  * @param {Object} [context] - context for calling the callback
  */
 PMS.prototype.once = function(type, callback, context){
+    context = context || null;
+
     this.on(type, callback, context, true);
 };
 
@@ -171,10 +173,11 @@ PMS.prototype.once = function(type, callback, context){
  *
  * @param {string} type - event type to be dispatched
  * @param {Object} [data] - event data
- * @param {*} [rawEvent] - raw event
+ * @param {*} [rawEvent] - RAW event
  */
 PMS.prototype.trigger = function(type, data, rawEvent){
     data = data || null;
+    rawEvent = rawEvent || null;
 
     var callbacks = this._callbacks[type],
         all = this._callbacks.all,
@@ -226,19 +229,21 @@ PMS.prototype.off = function(type, callback){
     type = type || null;
     callback = callback || null;
 
-    var typeArr, eName, offName = '_off';
+    var typeArr, eName, offMethod;
 
     if (!type){
         this._callbacks = {};
     } else{
         if (callback){
-            offName = '_offCallback';
+            offMethod = '_offCallback';
+        } else{
+            offMethod = '_off';
         }
 
         while ((typeArr = this._splitRegExp.exec(type))){
             eName = typeArr[0];
 
-            this[offName](eName, callback);
+            this[offMethod](eName, callback);
         }
     }
 };
@@ -256,7 +261,7 @@ PMS.prototype._off = function(type){
 /**
  * Removes certain event listener
  *
- * @param {string} type - event name to stop listen to
+ * @param {string} type - event name to stop listen to (there can be several types provided that should be divided by spaces and commas)
  * @param {Function} callback - callback to be removed from listening stack
  * @private
  */
