@@ -23,14 +23,6 @@ var PMS = function(sets){
 };
 
 /**
- * Regular expression to split event types
- *
- * @type {RegExp}
- * @private
- */
-PMS.prototype._splitRegExp = /[^,\s]+/g;
-
-/**
  * Set PMS settings
  *
  * @param {Object} sets - settings
@@ -141,9 +133,10 @@ PMS.prototype.on = function(type, callback, context, _once){
     context = context || null;
     _once = _once || false;
 
-    var typeArr, eName;
+    var typeArr, eName,
+        splitRegExp = /[^,\s]+/g;
 
-    while ((typeArr = this._splitRegExp.exec(type))){
+    while ((typeArr = splitRegExp.exec(type))){
         eName = typeArr[0];
         this._callbacks[eName] = this._callbacks[eName] || [];
 
@@ -158,7 +151,7 @@ PMS.prototype.on = function(type, callback, context, _once){
 /**
  * Binds callback to the event only once
  *
- * @param {string} type - event name to listen to
+ * @param {string} type - event name to listen to (there can be several types provided that should be divided by spaces and commas)
  * @param {Function} callback - callback to be called
  * @param {Object} [context] - context for calling the callback
  */
@@ -171,7 +164,7 @@ PMS.prototype.once = function(type, callback, context){
 /**
  * Triggers an event in this window
  *
- * @param {string} type - event type to be dispatched
+ * @param {string} type - event name to be dispatched (there can be several types provided that should be divided by spaces and commas)
  * @param {Object} [data] - event data
  * @param {*} [rawEvent] - RAW event
  */
@@ -179,20 +172,26 @@ PMS.prototype.trigger = function(type, data, rawEvent){
     data = data || null;
     rawEvent = rawEvent || null;
 
-    var callbacks = this._callbacks[type],
-        all = this._callbacks.all,
+    var typeArr, eName, callbacks, e, all,
+        splitRegExp = /[^,\s]+/g; //it can't be saved in the PMS prototype because that property will became a link to the RegEx instance. And the RegEx instance has a lastIndex pointer which shouldn't be changing from different places, because this can result to an infinite loop.
+
+    while ((typeArr = splitRegExp.exec(type))){
+        eName = typeArr[0];
+        all = this._callbacks.all;
+        callbacks = this._callbacks[eName];
         e = new InternalEvent({
-            type: type,
+            type: eName,
             data: data,
             rawEvent: rawEvent
         });
 
-    if (callbacks){
-        this._fire(e, callbacks);
-    }
-
-    if (all){
-        this._fire(e, all);
+        if (callbacks){
+            if (all){
+                callbacks.push(all);
+            }
+            
+            this._fire(e, callbacks);
+        }
     }
 };
 
@@ -229,7 +228,9 @@ PMS.prototype.off = function(type, callback){
     type = type || null;
     callback = callback || null;
 
-    var typeArr, eName, offMethod;
+    var typeArr, eName,
+        offMethod = '_off',
+        splitRegExp = /[^,\s]+/g;
 
     if (!type){
         this._callbacks = {};
@@ -240,7 +241,7 @@ PMS.prototype.off = function(type, callback){
             offMethod = '_off';
         }
 
-        while ((typeArr = this._splitRegExp.exec(type))){
+        while ((typeArr =splitRegExp.exec(type))){
             eName = typeArr[0];
 
             this[offMethod](eName, callback);

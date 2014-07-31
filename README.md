@@ -92,13 +92,14 @@ Binds callback to the event only *once*. You can provide several `type`s divided
 
 **.trigger(type[, data[, rawEvent]])**
 
-`type` (string) - event type to be dispatched  
+`type` (string) - event name to be dispatched  
 `data` (Object) - event data  
 `rawEvent` (*) - RAW event  
 
-Triggers an event in *this* window.
+Triggers an event in *this* window. You can provide several `type`s divided by spaces or commas.
 
     pms.trigger('saidHello', { to: 'John' });
+    pms.trigger('hello, hi, goodMorning', { to: 'John' });
 
 ---
 
