@@ -1,7 +1,7 @@
 PMS
 ===
 
-Post Message Service which helps to deal with native js window.postMessage.
+Post Message Service which helps to deal with native js [window.postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage).
 
 ---
 
