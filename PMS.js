@@ -6,7 +6,7 @@
  *  this.on('message', function(e){
  *      console.log(e.rawEvent);
  *  });
- * But note that in this case you will not be able to use connectionID (so don't even  set it, because it won't work)
+ * But note that in this case you will not be able to use connectionID (so don't even set it, because it won't work)
  * */
 
 /**
@@ -28,7 +28,7 @@ var PMS = function(sets){
  * @param {Object} sets - settings
   * @param {Window} sets.targetWindow - target window object (e.g. iframe.contentWindow, window.parent)
   * @param {string} [sets.connectionID] - unique ID of the current connection to filter messages from target window
-  * @param {string} [sets.targetOrigin] - representing the origin of the targetWindow where event must be dispatched
+  * @param {string} [sets.targetOrigin] - representing the origin of the targetWindow where event should be dispatched
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Window.postMessage
  */
 PMS.prototype.set = function(sets){
